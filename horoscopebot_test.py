@@ -10,8 +10,8 @@ bot = telebot.TeleBot(BOT_TOKEN)
 # Handler for /start and /hello
 @bot.message_handler(commands=['start', 'hello'])
 def send_welcome(message):
-    bot.reply_to(message, "Selamcanımbenimaşkımçiçeğim") #Your Welcome Messages
-    bot.send_message(message.chat.id, "Astroloji boş beleş bi iş, ama sen yinede istiyosan /horoscope yaz bi \n(bu bot sadece biricik seviglmin kullanımına açıktır)")
+    bot.reply_to(message, "Hi, Welcome to the Horoscope Bot!") #Your Welcome Messages
+    bot.send_message(message.chat.id, "To start, type /horoscope")
 
 # Function to get daily horoscope for a zodiac sign
 def get_daily_horoscope(sign: str, day: str) -> dict:
@@ -32,20 +32,20 @@ def fetch_horoscope(message, sign):
     horoscope = get_daily_horoscope(sign, day)
     data = horoscope["data"]
     horoscope_message = f'*Horoscope:* {data["horoscope_data"]}\\n*Sign:* {sign}\\n*Day:* {data["date"]}'
-    bot.send_message(message.chat.id, "al bakim")
+    bot.send_message(message.chat.id, "Here is your horoscope:")
     bot.send_message(message.chat.id, horoscope_message, parse_mode="Markdown")
 
 # Function to handle zodiac sign input and ask for the day
 @bot.message_handler(commands=['horoscope'])
 def sign_handler(message):
-    text = "Burcunu versene \n*Aries*, *Taurus*, *Gemini*, *Cancer,* *Leo*, *Virgo*, *Libra*, *Scorpio*, *Sagittarius*, *Capricorn*, *Aquarius*, and *Pisces*."
+    text = "Type your zodiac sign \n*Aries*, *Taurus*, *Gemini*, *Cancer,* *Leo*, *Virgo*, *Libra*, *Scorpio*, *Sagittarius*, *Capricorn*, *Aquarius*, and *Pisces*."
     sent_msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
     bot.register_next_step_handler(sent_msg, day_handler)
 
 # Function to handle day input and fetch horoscope
 def day_handler(message):
     sign = message.text
-    text = "Hangi günü istiyosun güzel kadın \n*TODAY*, *TOMORROW*, *YESTERDAY*, veya bu şekil YYYY-MM-DD."
+    text = "Type the date you want to know: \n*TODAY*, *TOMORROW*, *YESTERDAY*, or YYYY-MM-DD."
     sent_msg = bot.send_message(
         message.chat.id, text, parse_mode="Markdown")
     bot.register_next_step_handler(
